@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>rbc - checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --navy:#0B2E5C;
+    --navy-dark:#081F40;
+    --accent:#16A34A;
+    --bg:#F1F4F9;
+    --text:#1C2733;
+    --muted:#6B7686;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Poppins',Arial,sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(11,46,92,0.08), transparent 40%),
+      radial-gradient(circle at 100% 100%, rgba(22,163,74,0.06), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+
+  header{
+    background:linear-gradient(135deg,var(--navy) 0%, var(--navy-dark) 100%);
+    color:#fff;
+    padding:34px 20px 60px;
+    text-align:center;
+    position:relative;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .brand-logo{
+    width:44px;height:44px;border-radius:12px;
+    background:rgba(255,255,255,.14);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:18px;
+    border:1px solid rgba(255,255,255,.25);
+  }
+  .brand-name{font-weight:600;font-size:15px;letter-spacing:.3px;opacity:.92}
+  header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:.3px}
+  header p{margin:8px 0 0;opacity:.85;font-size:14px;font-weight:400}
+
+  main{max-width:760px;margin:-32px auto 40px;padding:0 18px}
+
+  .card{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 20px 45px rgba(11,46,92,.14);
+    padding:32px 28px;
+  }
+
+  .security-badge{
+    display:flex;align-items:center;gap:8px;
+    background:#EAF6EE;color:#166534;
+    border:1px solid #CDEBD7;
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:12.5px;font-weight:500;
+    margin-bottom:20px;
+  }
+  .security-badge svg{flex-shrink:0}
+
+  h2{font-size:19px;margin:0 0 6px;font-weight:600}
+  .subtitle{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+
+  label{font-size:13px;font-weight:500;color:var(--muted);display:block;margin-bottom:6px}
+  input{
+    width:100%;padding:14px 16px;
+    border:1.5px solid #DCE3ED;border-radius:12px;
+    font-size:15px;font-family:inherit;
+    transition:border-color .15s;
+    background:#FAFBFD;
+  }
+  input:focus{outline:none;border-color:var(--navy)}
+
+  button{
+    font-family:inherit;cursor:pointer;border:none;
+  }
+  .btn-primary{
+    margin-top:16px;width:100%;padding:15px;
+    border-radius:12px;background:var(--navy);color:#fff;
+    font-size:15.5px;font-weight:600;letter-spacing:.2px;
+    transition:background .15s, transform .1s;
+  }
+  .btn-primary:hover{background:var(--navy-dark)}
+  .btn-primary:active{transform:scale(.99)}
+
+  #fiche{display:none;margin-top:28px;border-top:1px solid #EBEEF3;padding-top:24px}
+
+  .student-row{
+    display:flex;align-items:center;gap:14px;margin-bottom:18px;
+  }
+  .avatar{
+    width:52px;height:52px;border-radius:50%;
+    background:linear-gradient(135deg,var(--navy),var(--navy-dark));
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:17px;flex-shrink:0;
+  }
+  .student-name{font-size:16.5px;font-weight:600;margin:0}
+  .student-sub{font-size:13px;color:var(--muted);margin:2px 0 0}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .item{
+    background:#F7F9FC;border:1px solid #EDF0F5;
+    padding:14px 16px;border-radius:12px;
+  }
+  .item b{display:block;font-size:11.5px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+  .item span{font-size:16px;font-weight:600}
+  .mention{color:var(--accent)}
+
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+  .btn-secondary{
+    padding:13px;border-radius:12px;font-size:14px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-download{background:var(--accent);color:#fff}
+  .btn-download:hover{background:#128A3E}
+  .btn-contact{background:#fff;color:var(--navy);border:1.5px solid #DCE3ED !important}
+  .btn-contact:hover{background:#F7F9FC}
+
+  .footnote{
+    text-align:center;font-size:12px;color:var(--muted);
+    margin-top:22px;padding-top:16px;border-top:1px solid #F0F2F6;
+  }
+
+  @media(max-width:600px){
+    .grid,.actions{grid-template-columns:1fr}
+    header{padding:28px 16px 50px}
+    .card{padding:26px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">RBC</div>
+    <div class="brand-name">BANQUE ROYALE DU CANADA</div>
+  </div>
+  <h1>Vérification des transactions</h1>
+  <p>Consultez vos transactions en temps réell</p>
+</header>
+
+<main>
+  <div class="card">
+
+    <div class="security-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="4" y="10" width="16" height="10" rx="2"/>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+      </svg>
+      Connexion sécurisée — données protégées conformément au RGPD
+    </div>
+
+    <h2>Paiement Checking</h2>
+    <p class="subtitle">Saisissez le numéro de référence. </p>
+
+    <label for="mat">Numéro de référence</label>
+    <input id="mat" placeholder="Ex. RBC202600145">
+    <button class="btn-primary" onclick="showCard()">Vérifier la transaction</button>
+
+    <div id="fiche">
+      <div class="student-row">
+        <div class="avatar">RBC</div>
+        <div>
+          <p class="student-name">Détail de la transaction</p>
+          <p class="student-sub"></p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="item"><b>FROM</b><span>Chantal Popsy</span></div>
+        <div class="item"><b>TO</b><span>Osée Mwaku Mufeji></div>
+       <div class="item"><b>ACCOUNT NUMBER</b><span>0269830040</span></div>
+       <div class="item"><b>ACCOUNT NUMBER</b><span>35240002158</span></div>
+       <div class="item"><b>AMOUNT</b><span>200.000$</span></div>
+       <div class="item"><b>BANK NAME</b><span>Ecobank Congo</span></div>
+       <div class="item"><b>DATE</b><span>07 July 2026</span></div>
+        <div class="item"><b>PAYMENT</b><span class="payment">Your transaction is processing</span></div>
+        
+        
+
+      <div class="actions">
+        <button class="btn-secondary btn-download" onclick="downloadReceipt()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+          Download the receipt
+        </button>
+ 
+        </button>
+      </div>
+    </div>
+
+   
+    </div>
+
+  </div>
+</main>
+
+<script>
+function showCard(){
+  const val = document.getElementById('mat').value.trim();
+  if(val===''){
+    alert('Veuillez saisir un matricule.');
+    return;
+  }
+  document.getElementById('fiche').style.display='block';
+  document.getElementById('fiche').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function contactSchool(){
+  window.location.href = "mailto:secretariat@ecole-demo.bj?subject=Demande%20d'information%20-%20KOUASSI%20Jean%20Michel";
+}
+
+function downloadReceipt(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const navy = [11,46,92];
+  const green = [22,163,74];
+  const gray = [107,118,134];
+
+  // En-tête
+   doc.setFillColor(...navy);
+  doc.rect(0,0,210,32,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.text('Transaction Receipt', 105, 15, {align:'center'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);
+  doc.text(' Royal Bank of Canada—  2025-2026', 105, 23, {align:'center'});
+
+
+  
+  let y = 80;
+  doc.setDrawColor(230,232,238);
+  doc.setFillColor(247,249,252);
+  doc.rect(20, y-8, 170, 8*rows.length + 6, 'F');
+
+  doc.setFontSize(11);
+  rows.forEach((r, i) => {
+    const rowY = y + i*8;
+    doc.setTextColor(...gray);
+    doc.setFont('helvetica','normal');
+    doc.text(r[0], 25, rowY);
+    doc.setTextColor(20,20,20);
+    doc.setFont('helvetica','bold');
+    if(r[0]==='Mention'){ doc.setTextColor(...green); }
+    doc.text(r[1], 180, rowY, {align:'right'});
+  });
+
+  // Pied de page
+  doc.setDrawColor(235,238,243);
+  doc.line(20, 275, 190, 275);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(...gray);
+ 
+
+  doc.save('Receipt_RBC0215l.pdf');
+}
+</script>
+
+</body>
+</html>
