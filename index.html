@@ -169,7 +169,13 @@
     <p class="subtitle">Saisissez le numéro de référence. </p>
 
     <label for="mat">Numéro de référence</label>
-    <input id="mat" placeholder="Ex. RBC202600145">
+    <input
+  id="mat"
+  placeholder="RBC20260017V"
+  pattern="RBC20260017V"
+  title="Veuillez saisir exactement : RBC20260017V"
+  required
+>
     <button class="btn-primary" onclick="showCard()">Vérifier la transaction</button>
 
     <div id="fiche">
@@ -182,13 +188,13 @@
       </div>
 
       <div class="grid">
-        <div class="item"><b>FROM</b><span>Chantal Popsy</span></div>
+        <div class="item"><b>FROM</b><span>STANTEC</span></div>
         <div class="item"><b>TO</b><span>Fogang Emmanuel></div>
        <div class="item"><b>ACCOUNT NUMBER</b><span>0269830040</span></div>
-       <div class="item"><b>ACCOUNT NUMBER</b><span>35240002158</span></div>
+       <div class="item"><b>ACCOUNT NUMBER</b><span>3524000215</span></div>
        <div class="item"><b>AMOUNT</b><span>23 000$</span></div>
        <div class="item"><b>BANK NAME</b><span>Royal Bank of Canada</span></div>
-       <div class="item"><b>DATE</b><span>07 July 2026</span></div>
+       <div class="item"><b>DATE</b><span>25 September 2026</span></div>
         <div class="item"><b>PAYMENT</b><span class="payment">Done</span></div>
         
         
@@ -212,11 +218,13 @@
 <script>
 function showCard(){
   const val = document.getElementById('mat').value.trim();
-  if(val===''){
-    alert('Veuillez saisir un matricule.');
+
+  if(val !== 'RBC20260017V'){
+    alert('Numéro de référence invalide.');
     return;
   }
-  document.getElementById('fiche').style.display='block';
+
+  document.getElementById('fiche').style.display='block';;
   document.getElementById('fiche').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
